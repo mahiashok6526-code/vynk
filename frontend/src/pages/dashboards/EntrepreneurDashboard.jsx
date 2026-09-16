@@ -5,6 +5,7 @@ import { TrustScoreBadge } from '../../components/common/TrustScoreBadge';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
+import { VynkLogo } from '../../components/common/VynkLogo';
 
 export function EntrepreneurDashboard() {
   const { user } = useAuth();
@@ -102,6 +103,7 @@ export function EntrepreneurDashboard() {
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <VynkLogo variant="symbol" size={24} />
               <Badge variant="cyan">Entrepreneur Portal</Badge>
               {user?.is_verified ? (
                 <Badge variant="emerald">Verified Account</Badge>

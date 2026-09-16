@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
+import { VynkLogo } from '../components/common/VynkLogo';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -59,7 +60,10 @@ export function LoginPage() {
       <div className="container" style={{ maxWidth: 460 }}>
         <div className="card" style={{ padding: '40px 32px' }}>
           <div style={{ textAlign: 'center', marginBottom: 28 }}>
-            <h2 style={{ fontSize: 26, marginBottom: 8 }}>Sign in to Vynk</h2>
+            <div style={{ marginBottom: 20 }}>
+              <VynkLogo variant="full" size={46} withLink />
+            </div>
+            <h2 style={{ fontSize: 24, marginBottom: 8 }}>Sign in to Vynk</h2>
             <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
               Access your sponsorship pipeline and verified profile.
             </p>

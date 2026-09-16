@@ -4,6 +4,7 @@ import { apiRequest } from '../../services/api';
 import { TrustScoreBadge } from '../../components/common/TrustScoreBadge';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
+import { VynkLogo } from '../../components/common/VynkLogo';
 
 export function SponsorDashboard() {
   const { user } = useAuth();
@@ -105,6 +106,7 @@ export function SponsorDashboard() {
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <VynkLogo variant="symbol" size={24} />
               <Badge variant="emerald">Sponsor & Fund Portal</Badge>
               <Badge variant="cyan">{user?.sponsor_profile?.sponsor_type || 'Angel Sponsor'}</Badge>
             </div>

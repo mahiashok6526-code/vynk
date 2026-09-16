@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { apiRequest } from '../../services/api';
 import { Badge } from '../../components/common/Badge';
+import { VynkLogo } from '../../components/common/VynkLogo';
 
 export function AdminDashboard() {
   const { user } = useAuth();
@@ -38,7 +39,10 @@ export function AdminDashboard() {
           }}
         >
           <div>
-            <Badge variant="indigo" style={{ marginBottom: 6 }}>Admin & Moderation Portal</Badge>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <VynkLogo variant="symbol" size={24} />
+              <Badge variant="indigo">Admin & Moderation Portal</Badge>
+            </div>
             <h1 style={{ fontSize: 26, marginBottom: 4 }}>Platform Governance</h1>
             <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
               Live telemetry, verification queues, and dispute moderation.

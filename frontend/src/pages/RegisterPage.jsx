@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { RoleSelector } from '../components/auth/RoleSelector';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
+import { VynkLogo } from '../components/common/VynkLogo';
 
 export function RegisterPage() {
   const { register } = useAuth();
@@ -84,7 +85,10 @@ export function RegisterPage() {
       <div className="container" style={{ maxWidth: 640 }}>
         <div className="card" style={{ padding: '36px 32px' }}>
           <div style={{ textAlign: 'center', marginBottom: 28 }}>
-            <h2 style={{ fontSize: 28, marginBottom: 8 }}>Join the Vynk Network</h2>
+            <div style={{ marginBottom: 20 }}>
+              <VynkLogo variant="full" size={46} withLink />
+            </div>
+            <h2 style={{ fontSize: 26, marginBottom: 8 }}>Join the Vynk Network</h2>
             <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
               Select your platform role and create your verified account.
             </p>

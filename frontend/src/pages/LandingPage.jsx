@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { TrustScoreBadge } from '../components/common/TrustScoreBadge';
 import { Badge } from '../components/common/Badge';
+import { VynkLogo } from '../components/common/VynkLogo';
 
 export function LandingPage() {
   const [activeTab, setActiveTab] = useState('entrepreneur');
@@ -12,6 +13,11 @@ export function LandingPage() {
       {/* Hero Section */}
       <section className="section" style={{ paddingTop: '60px', paddingBottom: '90px', position: 'relative' }}>
         <div className="container" style={{ textAlign: 'center', maxWidth: 960 }}>
+          {/* Official Vynk Logo */}
+          <div style={{ marginBottom: 24 }}>
+            <VynkLogo variant="full" size={64} />
+          </div>
+
           {/* Eyebrow Pill */}
           <div
             style={{

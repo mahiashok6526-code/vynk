@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { VynkLogo } from './VynkLogo';
 
 export function Footer() {
   return (
@@ -22,17 +23,8 @@ export function Footer() {
         >
           {/* Brand Info */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <span
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 22,
-                  fontWeight: 800,
-                  color: 'var(--text-primary)',
-                }}
-              >
-                Vynk
-              </span>
+            <div style={{ marginBottom: 14 }}>
+              <VynkLogo variant="full" size={32} withLink />
             </div>
             <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: 280 }}>
               The modern professional networking and sponsorship platform connecting idea creators with serious sponsors through verifiable trust.
