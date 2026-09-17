@@ -282,10 +282,21 @@ def sync_sqlite_columns(sync_conn):
 
 async def init_db():
     """Create database tables if they do not exist, and sync any new columns."""
-    # Import all models to ensure they are registered on Base.metadata
     import app.models  # noqa: F401
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        if is_sqlite:
+    import logging
+    _logger = logging.getLogger("vynk")
+
+    if is_sqlite:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
             await conn.run_sync(sync_sqlite_columns)
+    else:
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+        except Exception as exc:
+            _logger.warning(
+                f"Database auto-init on startup skipped or delayed (safe in production with migrations): {exc}"
+            )
+
 
