@@ -11,6 +11,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { EntrepreneurDashboard } from './pages/dashboards/EntrepreneurDashboard';
 import { SponsorDashboard } from './pages/dashboards/SponsorDashboard';
 import { AdminDashboard } from './pages/dashboards/AdminDashboard';
+import { ProfilePage } from './pages/ProfilePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // Central dispatcher for /dashboard that routes directly based on active role
@@ -50,6 +51,18 @@ export function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/p/:identifier" element={<ProfilePage />} />
+              <Route path="/profile/:identifier" element={<ProfilePage />} />
+
+              {/* Protected Profile Route */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Protected Dashboard Routes */}
               <Route

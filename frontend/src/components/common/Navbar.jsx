@@ -46,18 +46,32 @@ export function Navbar() {
           <Link to="/" style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
             Overview
           </Link>
-          <a href="#how-it-works" style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
+          <a href="/#how-it-works" style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
             How It Works
           </a>
-          <a href="#trust-architecture" style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
+          <a href="/#trust-architecture" style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
             Trust Architecture
           </a>
+          {isAuthenticated && (
+            <Link to="/profile" style={{ color: 'var(--brand-cyan)', fontSize: 14, fontWeight: 600 }}>
+              My Profile
+            </Link>
+          )}
         </nav>
 
         {/* Right Section: Auth State */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           {isAuthenticated && user ? (
             <>
+              <Link to="/profile" className="btn btn-ghost btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-primary)' }} title="View & Edit Professional Profile">
+                {user.avatar_url ? (
+                  <img src={user.avatar_url} alt={user.full_name} style={{ width: 20, height: 20, borderRadius: '50%', objectFit: 'cover' }} />
+                ) : (
+                  <span style={{ fontSize: 13 }}>👤</span>
+                )}
+                <span>My Profile</span>
+              </Link>
+
               <Link to="/dashboard" style={{ textDecoration: 'none' }}>
                 <Badge variant={user.role === 'sponsor' ? 'emerald' : 'cyan'}>
                   {user.role}

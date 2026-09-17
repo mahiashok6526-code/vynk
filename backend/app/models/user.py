@@ -17,6 +17,7 @@ class User(Base, TimestampMixin):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
+    username = Column(String(50), unique=True, index=True, nullable=True)
     hashed_password = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=False)
     role = Column(SQLEnum(UserRole, name="user_role_enum", native_enum=False), nullable=False, index=True)
@@ -44,6 +45,9 @@ class EntrepreneurProfile(Base, TimestampMixin):
     stage = Column(String(50), default="idea", nullable=False)  # idea, prototype, mvp, scaling
     industry = Column(String(100), nullable=True, index=True)  # AI/DeepTech, FinTech, HealthTech, etc.
     skills = Column(JSON, default=list, nullable=False)  # List of strings
+    experience = Column(JSON, default=list, nullable=False)  # List of dicts: title, company, duration, description
+    education = Column(JSON, default=list, nullable=False)  # List of dicts: institution, degree, year
+    achievements = Column(JSON, default=list, nullable=False)  # List of dicts: title, year, description
     pitch_deck_url = Column(String(512), nullable=True)
     linkedin_url = Column(String(512), nullable=True)
     github_url = Column(String(512), nullable=True)
@@ -61,11 +65,17 @@ class SponsorProfile(Base, TimestampMixin):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False, index=True)
     organization_name = Column(String(255), nullable=True)
+    logo_url = Column(String(512), nullable=True)
+    about = Column(Text, nullable=True)
+    industry = Column(String(100), nullable=True, index=True)
     sponsor_type = Column(String(100), default="individual_angel", nullable=False)  # angel, corporate, fund, grant
     focus_industries = Column(JSON, default=list, nullable=False)  # list of target industries
     min_budget = Column(Integer, default=1000, nullable=False)
     max_budget = Column(Integer, default=50000, nullable=False)
     preferred_sponsorship_types = Column(JSON, default=list, nullable=False)  # grant, equity, credits, mentorship
+    sponsorship_interests = Column(JSON, default=list, nullable=False)  # list of strings: interests/sectors
+    areas_supported = Column(JSON, default=list, nullable=False)  # list of strings: capital, compute_credits, mentorship, labs
+    previous_collaborations = Column(JSON, default=list, nullable=False)  # list of dicts: partner_name, year, description, outcome
 
     # Relationships
     user = relationship("User", back_populates="sponsor_profile")

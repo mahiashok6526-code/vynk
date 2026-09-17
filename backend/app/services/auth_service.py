@@ -1,3 +1,5 @@
+import re
+import uuid
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -52,8 +54,20 @@ class AuthService:
         role = UserRole(data.role)
         hashed_password = get_password_hash(data.password)
 
+        # Generate clean initial unique username
+        base_username = re.sub(r'[^a-zA-Z0-9_]', '_', data.email.split('@')[0]).lower()
+        if len(base_username) < 3:
+            base_username = f"user_{base_username}"
+        username_candidate = base_username[:25]
+
+        # Ensure uniqueness
+        existing_username = await db.execute(select(User).where(User.username == username_candidate))
+        if existing_username.scalar_one_or_none():
+            username_candidate = f"{username_candidate}_{uuid.uuid4().hex[:4]}"
+
         new_user = User(
             email=data.email.lower(),
+            username=username_candidate,
             hashed_password=hashed_password,
             full_name=data.full_name,
             role=role,
