@@ -18,16 +18,27 @@ if is_sqlite:
     )
 else:
     # PostgreSQL / asyncpg connection pool configuration
-    engine = create_async_engine(
-        settings.DATABASE_URL,
-        echo=settings.DEBUG,
-        future=True,
-        pool_size=settings.DB_POOL_SIZE,
-        max_overflow=settings.DB_MAX_OVERFLOW,
-        pool_timeout=settings.DB_POOL_TIMEOUT,
-        pool_recycle=settings.DB_POOL_RECYCLE,
-        pool_pre_ping=True,
-    )
+    if settings.DB_POOL_SIZE <= 0:
+        from sqlalchemy.pool import NullPool
+        engine = create_async_engine(
+            settings.DATABASE_URL,
+            echo=settings.DEBUG,
+            future=True,
+            poolclass=NullPool,
+            pool_pre_ping=True,
+        )
+    else:
+        engine = create_async_engine(
+            settings.DATABASE_URL,
+            echo=settings.DEBUG,
+            future=True,
+            pool_size=settings.DB_POOL_SIZE,
+            max_overflow=settings.DB_MAX_OVERFLOW,
+            pool_timeout=settings.DB_POOL_TIMEOUT,
+            pool_recycle=settings.DB_POOL_RECYCLE,
+            pool_pre_ping=True,
+        )
+
 
 # Enable foreign keys for SQLite
 if is_sqlite:
