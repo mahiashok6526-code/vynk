@@ -1,5 +1,6 @@
-from typing import List, Union
-from pydantic import AnyHttpUrl, field_validator
+import os
+from typing import List, Union, Optional
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,8 +13,10 @@ class Settings(BaseSettings):
     )
 
     PROJECT_NAME: str = "Vynk API"
-    VERSION: str = "0.1.0"
+    VERSION: str = "1.0.0"
     ENV: str = "development"
+    ENVIRONMENT: Optional[str] = None
+    DEBUG: bool = False
     API_V1_STR: str = "/api/v1"
 
     # Security & JWT
@@ -22,8 +25,12 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
     # Database
-    # Default to async SQLite for Phase 1 local development
+    # Default to async SQLite for local development and unit tests
     DATABASE_URL: str = "sqlite+aiosqlite:///./vynk.db"
+    DB_POOL_SIZE: int = 10
+    DB_MAX_OVERFLOW: int = 20
+    DB_POOL_TIMEOUT: int = 30
+    DB_POOL_RECYCLE: int = 3600
 
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = [
@@ -31,6 +38,10 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "http://localhost:3000",
     ]
+
+    # AI Service Configuration
+    AI_PROVIDER: str = "gemini"
+    GEMINI_API_KEY: str = ""
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
@@ -45,9 +56,51 @@ class Settings(BaseSettings):
             return [i.strip() for i in v.split(",") if i.strip()]
         return v
 
-    # AI Service Configuration (Pluggable for Phase 2)
-    AI_PROVIDER: str = "gemini"
-    GEMINI_API_KEY: str = ""
+    @model_validator(mode="after")
+    def validate_environment_and_production_settings(self) -> "Settings":
+        # Synchronize ENV and ENVIRONMENT
+        if self.ENVIRONMENT:
+            self.ENV = self.ENVIRONMENT.lower()
+        else:
+            self.ENVIRONMENT = self.ENV.lower()
+
+        is_production = self.ENV == "production"
+
+        if is_production:
+            # 1. Reject default/insecure/missing SECRET_KEY
+            insecure_defaults = [
+                "vynk_dev_secret",
+                "secret",
+                "dev-secret",
+                "change-me",
+                "password",
+                "123456",
+            ]
+            if (
+                not self.SECRET_KEY
+                or len(self.SECRET_KEY.strip()) < 32
+                or any(self.SECRET_KEY.lower().startswith(d) for d in insecure_defaults)
+            ):
+                raise ValueError(
+                    "Insecure or missing SECRET_KEY in production environment. "
+                    "A strong, randomly generated secret key (at least 32 characters) must be configured via SECRET_KEY environment variable."
+                )
+
+            # 2. Reject SQLite in production
+            if self.DATABASE_URL.startswith("sqlite"):
+                raise ValueError(
+                    "SQLite database is not permitted in production. "
+                    "Configure a production PostgreSQL database URL using asyncpg (e.g., postgresql+asyncpg://user:pass@host:5432/dbname)."
+                )
+
+            # 3. Reject wildcard CORS in production
+            if "*" in self.BACKEND_CORS_ORIGINS:
+                raise ValueError(
+                    "Wildcard '*' CORS origins are not permitted in production with credentials. "
+                    "Configure explicit frontend domain origins in BACKEND_CORS_ORIGINS."
+                )
+
+        return self
 
 
 settings = Settings()

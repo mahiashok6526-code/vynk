@@ -89,17 +89,25 @@ async def test_full_commitment_lifecycle(client: AsyncClient):
     assert step1_res.status_code == 200
     assert step1_res.json()["status"] == "discussion"
 
-    # 6. Progress commitment: Discussion -> Confirmed -> Completed
-    comp_res = await client.patch(
-        f"/api/v1/commitments/{commitment_id}/status",
-        headers={"Authorization": f"Bearer {spon_token}"},
-        json={
-            "new_status": "completed",
-            "note": "Tranche funds disbursed and verified on milestone delivery."
-        }
-    )
-    assert comp_res.status_code == 200
-    assert comp_res.json()["status"] == "completed"
+    # 6. Progress commitment through lifecycle: Discussion -> Promised -> Confirmed -> Agreement -> Funded -> Completed
+    for next_st, note_msg in [
+        ("promised", "Sponsor promised term sheet."),
+        ("confirmed", "Entrepreneur and sponsor confirmed terms."),
+        ("agreement", "Formal agreement drafted and signed."),
+        ("funded", "Disbursement tranche funded."),
+        ("completed", "Tranche funds disbursed and verified on milestone delivery."),
+    ]:
+        step_res = await client.patch(
+            f"/api/v1/commitments/{commitment_id}/status",
+            headers={"Authorization": f"Bearer {spon_token}"},
+            json={
+                "new_status": next_st,
+                "note": note_msg,
+            }
+        )
+        assert step_res.status_code == 200, f"Failed transitioning to {next_st}: {step_res.text}"
+        assert step_res.json()["status"] == next_st
+
 
     # 7. Verify Sponsor's Trust Score gained completed commitment point
     trust_res = await client.get(

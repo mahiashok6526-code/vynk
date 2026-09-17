@@ -277,7 +277,7 @@ export function LandingPage() {
                 <div style={{ backgroundColor: 'rgba(7, 9, 14, 0.8)', borderRadius: 'var(--radius-md)', padding: 24, border: '1px solid var(--border-subtle)' }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 8 }}>ENTREPRENEUR PREVIEW</div>
                   <h4 style={{ fontSize: 16, marginBottom: 4 }}>EcoLogix Clean Fleet</h4>
-                  <p style={{ fontSize: 13, marginBottom: 16, color: 'var(--text-muted)' }}>Seeking $50,000 grant + Cloud Credits</p>
+                  <p style={{ fontSize: 13, marginBottom: 16, color: 'var(--text-muted)' }}>Seeking ₹5,00,000 grant + Cloud Credits</p>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
                     <Badge variant="cyan">CleanTech</Badge>
                     <Badge variant="indigo">MVP Stage</Badge>
@@ -320,7 +320,7 @@ export function LandingPage() {
                 <div style={{ backgroundColor: 'rgba(7, 9, 14, 0.8)', borderRadius: 'var(--radius-md)', padding: 24, border: '1px solid var(--border-subtle)' }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 8 }}>SPONSOR PREVIEW</div>
                   <h4 style={{ fontSize: 16, marginBottom: 4 }}>Frontier Venture Partners</h4>
-                  <p style={{ fontSize: 13, marginBottom: 16, color: 'var(--text-muted)' }}>Focus: AI & CleanTech · $10k - $250k</p>
+                  <p style={{ fontSize: 13, marginBottom: 16, color: 'var(--text-muted)' }}>Focus: AI & CleanTech · ₹10L - ₹2.5Cr</p>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
                     <Badge variant="emerald">Venture Fund</Badge>
                     <Badge variant="cyan">3 Active Commitments</Badge>

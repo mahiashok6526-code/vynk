@@ -10,8 +10,22 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { EntrepreneurDashboard } from './pages/dashboards/EntrepreneurDashboard';
 import { SponsorDashboard } from './pages/dashboards/SponsorDashboard';
-import { AdminDashboard } from './pages/dashboards/AdminDashboard';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { AdminProjectsPage } from './pages/admin/AdminProjectsPage';
+import { AdminReportsPage } from './pages/admin/AdminReportsPage';
+import { AdminDisputesPage } from './pages/admin/AdminDisputesPage';
+import { AdminAuditLogsPage } from './pages/admin/AdminAuditLogsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { ProjectsDiscoveryPage } from './pages/projects/ProjectsDiscoveryPage';
+import { SponsorsDiscoveryPage } from './pages/sponsors/SponsorsDiscoveryPage';
+import { ProjectCreatePage } from './pages/projects/ProjectCreatePage';
+import { ProjectDetailPage } from './pages/projects/ProjectDetailPage';
+import { ProjectEditPage } from './pages/projects/ProjectEditPage';
+import { CommitmentDetailPage } from './pages/commitments/CommitmentDetailPage';
+import { MessagesPage } from './pages/messages/MessagesPage';
+import { NotificationsPage } from './pages/notifications/NotificationsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // Central dispatcher for /dashboard that routes directly based on active role
@@ -34,7 +48,7 @@ function DashboardDispatcher() {
     return <Navigate to="/dashboard/sponsor" replace />;
   }
   if (user.role === 'admin') {
-    return <Navigate to="/dashboard/admin" replace />;
+    return <Navigate to="/admin" replace />;
   }
   return <Navigate to="/dashboard/entrepreneur" replace />;
 }
@@ -54,12 +68,63 @@ export function App() {
               <Route path="/p/:identifier" element={<ProfilePage />} />
               <Route path="/profile/:identifier" element={<ProfilePage />} />
 
+              {/* Project & Sponsor Showcase Routes */}
+              <Route path="/projects" element={<ProjectsDiscoveryPage />} />
+              <Route path="/sponsors" element={<SponsorsDiscoveryPage />} />
+              <Route
+                path="/projects/new"
+                element={
+                  <ProtectedRoute allowedRoles={['entrepreneur']}>
+                    <ProjectCreatePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/projects/:id" element={<ProjectDetailPage />} />
+              <Route
+                path="/projects/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={['entrepreneur']}>
+                    <ProjectEditPage />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Protected Profile Route */}
               <Route
                 path="/profile"
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Sponsorship Commitment Detail Route */}
+              <Route
+                path="/commitments/:id"
+                element={
+                  <ProtectedRoute>
+                    <CommitmentDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Secure Messaging Route */}
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <MessagesPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Notification Center Route */}
+              <Route
+                path="/notifications"
+                element={
+                  <ProtectedRoute>
+                    <NotificationsPage />
                   </ProtectedRoute>
                 }
               />
@@ -89,11 +154,28 @@ export function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Phase 9 Admin & Moderation Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<AdminDashboardPage />} />
+                <Route path="users" element={<AdminUsersPage />} />
+                <Route path="projects" element={<AdminProjectsPage />} />
+                <Route path="reports" element={<AdminReportsPage />} />
+                <Route path="disputes" element={<AdminDisputesPage />} />
+                <Route path="audit-logs" element={<AdminAuditLogsPage />} />
+              </Route>
+              {/* Backwards-compatible /dashboard/admin redirect */}
               <Route
                 path="/dashboard/admin"
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
-                    <AdminDashboard />
+                    <Navigate to="/admin" replace />
                   </ProtectedRoute>
                 }
               />

@@ -10,13 +10,19 @@ from app.models.sponsorship import (
     CommitmentUpdate,
 )
 from app.models.trust import TrustScore, TrustScoreEvent
-from app.models.communication import Message, Notification
+from app.models.communication import Message, Notification, Conversation, NotificationPreference
 from app.models.moderation import (
     VerificationRecord,
     VerificationStatus,
     Report,
     ReportStatus,
+    ReportCategory,
+    Dispute,
+    DisputeStatus,
+    DisputeReason,
+    AdminAuditLog,
 )
+from app.models.ai_match import AIMatchExplanation
 
 __all__ = [
     "Base",
@@ -37,9 +43,17 @@ __all__ = [
     "TrustScore",
     "TrustScoreEvent",
     "Message",
+    "Conversation",
     "Notification",
+    "NotificationPreference",
     "VerificationRecord",
     "VerificationStatus",
     "Report",
     "ReportStatus",
+    "ReportCategory",
+    "Dispute",
+    "DisputeStatus",
+    "DisputeReason",
+    "AdminAuditLog",
+    "AIMatchExplanation",
 ]

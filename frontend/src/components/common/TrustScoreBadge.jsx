@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function TrustScoreBadge({ score = 50, size = 'md', showLabel = true }) {
+export function TrustScoreBadge({ score = 50, size = 'md', showLabel = true, onClick = null }) {
   // Determine color hue based on score
   let scoreColor = '#10B981'; // Green (75+)
   let borderColor = 'rgba(16, 185, 129, 0.4)';
@@ -21,12 +21,15 @@ export function TrustScoreBadge({ score = 50, size = 'md', showLabel = true }) {
   return (
     <div
       className="trust-badge"
+      onClick={onClick || undefined}
       style={{
         borderColor,
         boxShadow: `0 0 14px ${glowColor}`,
         padding: isSmall ? '3px 10px' : '5px 14px',
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'all 0.2s ease',
       }}
-      title="Verifiable Platform Trust Score based on completed commitments, responsiveness, and identity verification"
+      title={onClick ? "Click to view Trust Score & Reputation breakdown" : "Verifiable Platform Trust Score based on completed commitments, responsiveness, and identity verification"}
     >
       <svg
         width={isSmall ? "13" : "15"}

@@ -1,0 +1,57 @@
+services:
+  # PostgreSQL Production Database
+  db:
+    image: postgres:16-alpine
+    container_name: vynk_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vynk_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vynk_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-vynk_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vynk_user} -d ${POSTGRES_DB:-vynk_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vynk_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENV: production
+      PROJECT_NAME: "Vynk API"
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-vynk_user}:${POSTGRES_PASSWORD:-vynk_secure_password}@db:5432/${POSTGRES_DB:-vynk_db}
+      BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS:-["http://localhost","http://localhost:5173"]}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    ports:
+      - "8000:8000"
+
+  # React Frontend Service (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api/v1}
+    container_name: vynk_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+    driver: local

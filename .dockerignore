@@ -1,0 +1,25 @@
+# Docker ignore file
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+vynk.db
+backend/vynk.db
+.venv
+backend/.venv
+node_modules
+frontend/node_modules
+dist
+frontend/dist
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+tests
+docs
+*.md

@@ -144,12 +144,14 @@ def run_tests():
         comm_id = comm['id']
         print(f"[PASS] 9. Live sponsorship commitment created: id={comm_id}, amount=${comm['amount']:,.2f}, status={comm['status']}")
 
-    # 10. Test Progression: Interested -> Discussion -> Promised -> Confirmed -> Completed
+    # 10. Test Progression: Interested -> Discussion -> Promised -> Confirmed -> Agreement -> Funded -> Completed
     for next_st, note in [
         ('discussion', 'Technical review call complete'),
         ('promised', 'Term sheet delivered'),
-        ('confirmed', 'Agreement executed'),
-        ('completed', 'Tranche disbursed')
+        ('confirmed', 'Terms confirmed'),
+        ('agreement', 'Agreement executed'),
+        ('funded', 'Tranche disbursed'),
+        ('completed', 'Milestones fulfilled and commitment completed')
     ]:
         patch_data = json.dumps({'new_status': next_st, 'note': note}).encode('utf-8')
         patch_req = urllib.request.Request(

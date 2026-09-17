@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey, Enum as SQLEnum, JSON
+from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey, Enum as SQLEnum, JSON, DateTime
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -27,6 +27,10 @@ class User(Base, TimestampMixin):
     headline = Column(String(255), nullable=True)
     bio = Column(Text, nullable=True)
     location = Column(String(255), nullable=True)
+    is_suspended = Column(Boolean, default=False, nullable=False)
+    suspended_at = Column(DateTime(timezone=True), nullable=True)
+    suspended_by = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    suspension_reason = Column(Text, nullable=True)
 
     # Relationships
     entrepreneur_profile = relationship("EntrepreneurProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
@@ -34,6 +38,7 @@ class User(Base, TimestampMixin):
     trust_score = relationship("TrustScore", back_populates="user", uselist=False, cascade="all, delete-orphan")
     trust_events = relationship("TrustScoreEvent", back_populates="user", cascade="all, delete-orphan")
     notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
+    notification_preferences = relationship("NotificationPreference", back_populates="user", uselist=False, cascade="all, delete-orphan")
     verification_records = relationship("VerificationRecord", foreign_keys="VerificationRecord.user_id", back_populates="user", cascade="all, delete-orphan")
 
 
@@ -72,6 +77,7 @@ class SponsorProfile(Base, TimestampMixin):
     focus_industries = Column(JSON, default=list, nullable=False)  # list of target industries
     min_budget = Column(Integer, default=1000, nullable=False)
     max_budget = Column(Integer, default=50000, nullable=False)
+    currency = Column(String(10), default="INR", nullable=False)
     preferred_sponsorship_types = Column(JSON, default=list, nullable=False)  # grant, equity, credits, mentorship
     sponsorship_interests = Column(JSON, default=list, nullable=False)  # list of strings: interests/sectors
     areas_supported = Column(JSON, default=list, nullable=False)  # list of strings: capital, compute_credits, mentorship, labs

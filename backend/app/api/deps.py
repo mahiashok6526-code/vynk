@@ -62,7 +62,34 @@ async def get_current_user(
             detail="User account is inactive.",
         )
 
+    if getattr(user, "is_suspended", False):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"User account is suspended. Reason: {user.suspension_reason or 'Policy violation'}",
+        )
+
     return user
+
+
+async def get_current_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+    db: AsyncSession = Depends(get_db),
+) -> Optional[User]:
+    """Retrieve user if valid Bearer token is provided, otherwise return None."""
+    if not credentials:
+        return None
+    token = credentials.credentials
+    payload = decode_access_token(token)
+    if not payload:
+        return None
+    user_id_str = payload.get("sub")
+    if not user_id_str:
+        return None
+    try:
+        user_id = int(user_id_str)
+        return await AuthService.get_user_by_id(db, user_id)
+    except Exception:
+        return None
 
 
 def require_role(required_role: UserRole):

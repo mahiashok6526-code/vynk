@@ -205,7 +205,7 @@ export function RegisterPage() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                     <div className="form-group">
-                      <label className="form-label">Min Sponsorship ($)</label>
+                      <label className="form-label">Min Sponsorship (₹)</label>
                       <input
                         type="number"
                         className="form-input"
@@ -215,7 +215,7 @@ export function RegisterPage() {
                       />
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Max Sponsorship ($)</label>
+                      <label className="form-label">Max Sponsorship (₹)</label>
                       <input
                         type="number"
                         className="form-input"

@@ -26,7 +26,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6)
     full_name: str = Field(..., min_length=2, max_length=100)
-    role: str = Field(..., pattern="^(entrepreneur|sponsor)$")
+    role: str = Field(..., pattern="^(entrepreneur|sponsor|admin)$")
 
     # Optional initial role details
     headline: Optional[str] = None

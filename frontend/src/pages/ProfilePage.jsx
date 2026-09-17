@@ -3,11 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { profileService } from '../services/profileService';
 import { TrustScoreBadge } from '../components/common/TrustScoreBadge';
+import { TrustScoreBreakdownModal } from '../components/trust/TrustScoreBreakdownModal';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { VynkLogo } from '../components/common/VynkLogo';
 import { ProfileCompletionCard } from '../components/profile/ProfileCompletionCard';
 import { EditProfileModal } from '../components/profile/EditProfileModal';
+import { formatCurrency } from '../utils/currency';
 
 export function ProfilePage() {
   const { identifier } = useParams();
@@ -17,6 +19,7 @@ export function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isTrustModalOpen, setIsTrustModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   const loadProfile = async () => {
@@ -236,7 +239,11 @@ export function ProfilePage() {
 
             {/* Trust Score Card Preview */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
-              <TrustScoreBadge score={ts.score ?? 50} size="lg" />
+              <TrustScoreBadge
+                score={ts.score ?? 50}
+                size="lg"
+                onClick={() => setIsTrustModalOpen(true)}
+              />
               {isOwnProfile && (
                 <Button variant="secondary" size="sm" onClick={() => setIsEditModalOpen(true)}>
                   Edit Profile
@@ -287,7 +294,7 @@ export function ProfilePage() {
                 <div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Budget / Ticket Size</div>
                   <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--brand-emerald)', marginTop: 2 }}>
-                    ${(sp.min_budget || 5000).toLocaleString()} – ${(sp.max_budget || 100000).toLocaleString()}
+                    {formatCurrency(sp.min_budget || 5000, 'INR')} – {formatCurrency(sp.max_budget || 100000, 'INR')}
                   </div>
                 </div>
                 <div>
@@ -679,41 +686,54 @@ export function ProfilePage() {
                 <span>💠</span> Vynk Verifiable Trust Score
               </h3>
               <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0 0' }}>
-                Algorithmic reputation computed from contract milestone fulfillment, response speed, and peer reviews.
+                Auditable platform credibility derived from verified commitments, delivered milestones, and responsive communication.
               </p>
             </div>
-            <TrustScoreBadge score={ts.score ?? 50} size="lg" />
+            <TrustScoreBadge
+              score={ts.score ?? 50}
+              size="lg"
+              onClick={() => setIsTrustModalOpen(true)}
+            />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
             <div style={{ padding: 14, borderRadius: 'var(--radius-md)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)' }}>
               <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Verification Points</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--brand-cyan)', marginTop: 4 }}>
-                {ts.verification_points ?? 0} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 25</span>
+                {ts.verification_score ?? ts.verification_points ?? 0} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 25</span>
               </div>
             </div>
 
             <div style={{ padding: 14, borderRadius: 'var(--radius-md)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Milestone Reliability</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Commitment Reliability</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--brand-emerald)', marginTop: 4 }}>
-                {ts.commitments_points ?? 20} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 30</span>
+                {ts.commitment_score ?? ts.commitments_points ?? 0} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 35</span>
               </div>
             </div>
 
             <div style={{ padding: 14, borderRadius: 'var(--radius-md)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Response Velocity</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Milestone Execution</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: '#A5B4FC', marginTop: 4 }}>
-                {ts.responsiveness_points ?? 15} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 25</span>
+                {ts.milestone_score ?? 0} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 20</span>
               </div>
             </div>
 
             <div style={{ padding: 14, borderRadius: 'var(--radius-md)', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)' }}>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Ecosystem Activity</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Platform Responsiveness</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--brand-amber)', marginTop: 4 }}>
-                {ts.activity_points ?? 15} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 20</span>
+                {ts.activity_score ?? ts.activity_points ?? 0} <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ 20</span>
               </div>
             </div>
           </div>
+
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setIsTrustModalOpen(true)}
+            style={{ width: '100%', marginTop: 20 }}
+          >
+            View Auditable Reputation Breakdown & History →
+          </Button>
         </div>
       </div>
 
@@ -728,6 +748,14 @@ export function ProfilePage() {
           }}
         />
       )}
+
+      {/* Trust Score Breakdown Modal */}
+      <TrustScoreBreakdownModal
+        isOpen={isTrustModalOpen}
+        onClose={() => setIsTrustModalOpen(false)}
+        userId={profile?.id}
+        isPublic={!isOwnProfile}
+      />
     </div>
   );
 }

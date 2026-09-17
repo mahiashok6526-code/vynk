@@ -25,6 +25,11 @@ async def health_check(db: AsyncSession = Depends(get_db)):
 
     latency_ms = round((time.time() - start_time) * 1000, 2)
 
+    # Mask internal database error details in production
+    sanitized_error = None
+    if error_msg:
+        sanitized_error = error_msg if settings.ENV != "production" else "Database connectivity check failed"
+
     return {
         "status": "healthy" if db_status == "healthy" else "degraded",
         "service": settings.PROJECT_NAME,
@@ -34,6 +39,6 @@ async def health_check(db: AsyncSession = Depends(get_db)):
             "status": db_status,
             "dialect": engine.dialect.name,
             "latency_ms": latency_ms,
-            "error": error_msg,
+            "error": sanitized_error,
         }
     }

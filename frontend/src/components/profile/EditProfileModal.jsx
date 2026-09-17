@@ -692,13 +692,13 @@ export function EditProfileModal({ profile, isOpen, onClose, onSaved }) {
                 {!isEntrepreneur && (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                     <Input
-                      label="Minimum Sponsorship Budget ($)"
+                      label="Minimum Sponsorship Budget (₹)"
                       type="number"
                       value={minBudget}
                       onChange={(e) => setMinBudget(e.target.value)}
                     />
                     <Input
-                      label="Maximum Sponsorship Budget ($)"
+                      label="Maximum Sponsorship Budget (₹)"
                       type="number"
                       value={maxBudget}
                       onChange={(e) => setMaxBudget(e.target.value)}
@@ -1123,7 +1123,7 @@ export function EditProfileModal({ profile, isOpen, onClose, onSaved }) {
                     <input
                       type="text"
                       className="input"
-                      placeholder="Nature of sponsorship provided (e.g. $50k grant & GPU access)"
+                      placeholder="Nature of sponsorship provided (e.g. ₹50L grant & GPU access)"
                       value={collabDesc}
                       onChange={(e) => setCollabDesc(e.target.value)}
                       style={{ marginTop: 8 }}

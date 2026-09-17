@@ -2,10 +2,12 @@
  * Vynk API Client with JWT Bearer Token Injection and Error Normalization.
  */
 
-const API_BASE_URL = '/api/v1';
+const rawBase = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const API_BASE_URL = rawBase.endsWith('/') ? rawBase.slice(0, -1) : rawBase;
 
 export async function apiRequest(endpoint, options = {}) {
   const token = localStorage.getItem('vynk_token');
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -22,7 +24,8 @@ export async function apiRequest(endpoint, options = {}) {
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const response = await fetch(`${API_BASE_URL}${cleanEndpoint}`, config);
+
 
     // If 401, clear stored auth if not already on login/register
     if (response.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/register')) {
